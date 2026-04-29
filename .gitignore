@@ -1,0 +1,15 @@
+# Спільне
+node_modules/
+.DS_Store
+.env
+
+# Фронтенд (Next.js)
+frontend/.next/
+frontend/out/
+frontend/build/
+frontend/.vercel/
+
+# Логи
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
