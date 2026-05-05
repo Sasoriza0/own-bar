@@ -4,6 +4,10 @@ import cors from 'cors';
 import cookieParser from "cookie-parser";  
 import dotenv from 'dotenv';
 
+
+import router from './routes/routes.js'; 
+
+
 dotenv.config();
 
 const app = express();
@@ -17,9 +21,7 @@ app.use(express.json());
 
 app.use(cookieParser());
 
-app.get('/api/health', (req, res) => {
-    res.status(200).json({status: 'ok', message: 'Own bar API is running!'});
-});
+app.use('/api', router)
 
 const PORT = process.env.PORT || 5000;
 
