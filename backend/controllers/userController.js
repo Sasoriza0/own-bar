@@ -29,14 +29,21 @@ export const register = async (req, res, next) => {
         const token = jwt.sign({_id: user._id}, process.env.SECRET_KEY, {expiresIn: '7d'})
 
         const {passwordHash, ...userData} = user._doc
+
+        res.cookie('token', token, {
+            maxAge: 7 * 24 * 60 * 60 * 1000, 
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production', 
+            sameSite: 'strict'
+        })
         
         res.json({
             ...userData,
-            token
+            message: 'successfully'
         })
     } catch (err) {
         console.log(err)
-        next(ApiError.internal('непередбачувана помилка'))
+        next(ApiError.internal('internal error'))
     }
 };
 
@@ -57,13 +64,19 @@ export const login = async (req, res, next) => {
 
         const {passwordHash, ...userData} = user._doc
         
+        res.cookie('token', token, {
+            maxAge: 7 * 24 * 60 * 60 * 1000, 
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production', 
+            sameSite: 'strict'
+        })
+        
         res.json({
             ...userData,
-            token,
-            message: 'logined'
+            message: 'successfully'
         })
     } catch (err) {
         console.log(err)
-        next(ApiError.internal('непередбачувана помилка'))
+        next(ApiError.internal('internal error'))
     }
 };
