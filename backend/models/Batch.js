@@ -1,6 +1,6 @@
 import mongoose from "mongoose"; 
 
-const measurmentSchema = new mongoose.Schema({
+const measurementSchema = new mongoose.Schema({
     date: {
         type: Date,
         default: Date.now
@@ -46,7 +46,7 @@ const batchSchema = new mongoose.Schema({
         enum: ['fermenting', 'aging', 'bottled', 'archived'],
         default: 'fermenting'
     },
-    measurments: [measurmentSchema],
+    measurements: [measurementSchema],
 }, {
     timestamps: true
 });

@@ -22,6 +22,7 @@ export const createBatch = async (req, res, next) => {
     };
 };
 
+
 export const getAllBatches = async (req, res, next) => {
     try {
         const batches = await Batch.find({userId: req.user._id});
@@ -29,6 +30,37 @@ export const getAllBatches = async (req, res, next) => {
         res.json({
             batches,
             message: 'successfully'
+        });
+    } catch (error) {
+        console.log(error);
+        next(ApiError.internal('internal error'));
+    }
+};
+
+
+export const addMeasurement = async (req, res, next) => {
+    try {
+        const { id } = req.params; 
+        const { sugarLevel, temperature, actionType, note } = req.body;
+
+        const batch = await Batch.findOne({ _id: id, userId: req.user._id });
+
+        if (!batch) {
+            return next(ApiError.badRequest('party not found or you do not have access'));
+        }
+
+        batch.measurements.push({
+            sugarLevel,
+            temperature,
+            actionType, 
+            note
+        });
+
+        await batch.save();
+
+        res.json({
+            batch,
+            message: 'Measurment succssesfully added'
         });
     } catch (error) {
         console.log(error);
