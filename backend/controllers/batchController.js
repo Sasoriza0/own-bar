@@ -67,3 +67,49 @@ export const addMeasurement = async (req, res, next) => {
         next(ApiError.internal('internal error'));
     }
 };
+
+
+export const updateBatchStatus = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const { status } = req.body; 
+
+        const batch = await Batch.findOneAndUpdate(
+            { _id: id, userId: req.user._id }, 
+            { status: status }, 
+            { new: true }
+        );
+
+        if (!batch) {
+            return next(ApiError.badRequest('Batch not found or access denied'));
+        }
+
+        res.json({
+            batch,
+            message: 'Status updated successfully'
+        });
+    } catch (error) {
+        console.log(error);
+        next(ApiError.internal('Error updating batch status'));
+    }
+};
+
+
+export const deleteBatch = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+
+        const batch = await Batch.findOneAndDelete({ _id: id, userId: req.user._id });
+
+        if (!batch) {
+            return next(ApiError.badRequest('Batch not found or access denied'));
+        }
+
+        res.json({
+            message: 'Batch deleted successfully'
+        });
+    } catch (error) {
+        console.log(error);
+        next(ApiError.internal('Error deleting batch'));
+    }
+};
